@@ -5,6 +5,8 @@ import BookingWidget from '@/components/hotel/BookingWidget';
 import { MapPin, Star, Wifi, Car, Coffee, Utensils } from 'lucide-react';
 
 // This is a Server Component
+export const dynamic = "force-dynamic";
+
 export default async function HotelPage({ params }: { params: { slug: string } }) {
     const slug = params.slug;
 
