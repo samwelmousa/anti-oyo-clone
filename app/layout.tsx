@@ -5,6 +5,7 @@ import Navbar from "@/components/shared/Navbar";
 import AuthProvider from "@/components/auth/AuthProvider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,6 +35,7 @@ export default function RootLayout({
             <Navbar />
             <main className="min-h-screen bg-gray-50 dark:bg-slate-950">{children}</main>
             <Toaster />
+            <SpeedInsights />
           </ThemeProvider>
         </AuthProvider>
       </body>
