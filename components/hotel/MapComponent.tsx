@@ -14,8 +14,8 @@ interface MapComponentProps {
 export default function MapComponent({ hotels, highlightedHotelId }: MapComponentProps) {
     // Center map on first hotel or default location
     const initialViewState = {
-        longitude: hotels[0]?.coordinates.lng || -73.9855,
-        latitude: hotels[0]?.coordinates.lat || 40.7580,
+        longitude: hotels[0]?.coordinates?.lng || -73.9855,
+        latitude: hotels[0]?.coordinates?.lat || 40.7580,
         zoom: 12
     };
 
@@ -36,8 +36,8 @@ export default function MapComponent({ hotels, highlightedHotelId }: MapComponen
                 {hotels.map((hotel) => (
                     <Marker
                         key={hotel.id}
-                        longitude={hotel.coordinates.lng}
-                        latitude={hotel.coordinates.lat}
+                        longitude={hotel.coordinates?.lng || 0}
+                        latitude={hotel.coordinates?.lat || 0}
                         anchor="bottom"
                         onClick={(e) => {
                             e.originalEvent.stopPropagation();
@@ -69,8 +69,8 @@ export default function MapComponent({ hotels, highlightedHotelId }: MapComponen
                 {popupInfo && (
                     <Popup
                         anchor="top"
-                        longitude={popupInfo.coordinates.lng}
-                        latitude={popupInfo.coordinates.lat}
+                        longitude={popupInfo.coordinates?.lng || 0}
+                        latitude={popupInfo.coordinates?.lat || 0}
                         onClose={() => setPopupInfo(null)}
                         closeOnClick={false}
                     >

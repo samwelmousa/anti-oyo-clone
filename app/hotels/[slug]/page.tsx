@@ -104,7 +104,7 @@ export default async function HotelPage({ params }: { params: { slug: string } }
 
                 {/* Right Sidebar - Sticky Booking Widget */}
                 <div className="relative">
-                    <BookingWidget price={room.price} roomId={room.id} />
+                    <BookingWidget price={Number(room.price)} roomId={room.id} />
                 </div>
             </main>
         </div>

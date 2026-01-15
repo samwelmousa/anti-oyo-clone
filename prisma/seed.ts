@@ -35,6 +35,8 @@ async function main() {
                 name: mockHotel.name,
                 description: `Experience the best stay at ${mockHotel.name}. Located centrally in ${mockHotel.location}.`,
                 address: mockHotel.location,
+                lat: mockHotel.coordinates.lat,
+                lng: mockHotel.coordinates.lng,
                 images: [mockHotel.images[0]],
                 isVerified: mockHotel.isVerified,
             },

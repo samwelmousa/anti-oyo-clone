@@ -68,6 +68,8 @@ model Hotel {
   name        String
   description String
   address     String
+  lat         Float?
+  lng         Float?
   images      String[]
   isVerified  Boolean   @default(false)
   ownerId     String?

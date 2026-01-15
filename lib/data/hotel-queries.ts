@@ -3,13 +3,33 @@ import { unstable_cache } from "next/cache";
 
 export const getHotels = unstable_cache(
     async () => {
-        return await prisma.hotel.findMany({
+        const hotels = await prisma.hotel.findMany({
             orderBy: { createdAt: "desc" },
             include: {
                 rooms: {
-                    select: { price: true },
+                    select: { price: true, slug: true },
+                    take: 1
                 },
             },
+        });
+
+        // Map to UI-compatible format and serialize Decimal
+        return hotels.map(hotel => {
+            const firstRoom = hotel.rooms[0];
+            return {
+                id: hotel.id,
+                name: hotel.name,
+                location: hotel.address,
+                price: firstRoom ? Number(firstRoom.price) : 0,
+                images: hotel.images,
+                rating: 4.5, // Default rating as Review model isn't aggregated yet
+                slug: firstRoom?.slug || hotel.id,
+                isVerified: hotel.isVerified,
+                coordinates: {
+                    lat: hotel.lat || 40.7128,
+                    lng: hotel.lng || -74.0060
+                }
+            };
         });
     },
     ["hotels"],

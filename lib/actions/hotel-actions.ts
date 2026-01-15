@@ -27,7 +27,7 @@ export async function toggleVerification(hotelId: string) {
 
     revalidatePath("/dashboard/admin");
     revalidatePath("/search");
-    revalidateTag("hotels", "max");
+    revalidateTag("hotels");
 
     return { success: true };
 }
@@ -42,7 +42,7 @@ export async function createHotel(data: any) {
         data,
     });
 
-    revalidateTag("hotels", "max");
+    revalidateTag("hotels");
     revalidatePath("/search");
 
     return hotel;
