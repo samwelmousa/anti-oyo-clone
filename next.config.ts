@@ -2,10 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   transpilePackages: ['mapbox-gl', 'react-map-gl'],
-  // @ts-ignore
-  turbopack: {
-    root: 'C:/Users/samwe/Desktop/anti',
-  },
+  // Turbopack will auto-detect the root directory
   images: {
     remotePatterns: [
       {
