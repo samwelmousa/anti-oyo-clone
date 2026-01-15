@@ -39,7 +39,7 @@ export default async function OwnerDashboard() {
     const totalRevenue = Number(revenueResult._sum.totalPrice) || 0;
 
     // 2. Fetch Owner's Hotels
-    const hotels = await prisma.hotel.findMany({
+    const rawHotels = await prisma.hotel.findMany({
         where: { ownerId: userId },
         include: {
             _count: {
@@ -48,6 +48,13 @@ export default async function OwnerDashboard() {
         },
         orderBy: { createdAt: "desc" },
     });
+
+    const hotels = rawHotels.map(h => ({
+        ...h,
+        _count: h._count,
+        createdAt: h.createdAt.toISOString(),
+        updatedAt: h.updatedAt.toISOString(),
+    }));
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-8">

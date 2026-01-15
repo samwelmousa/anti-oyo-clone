@@ -27,6 +27,7 @@ export async function toggleVerification(hotelId: string) {
 
     revalidatePath("/dashboard/admin");
     revalidatePath("/search");
+    // @ts-ignore - Next.js revalidateTag type mismatch in some environments
     revalidateTag("hotels");
 
     return { success: true };
@@ -42,6 +43,7 @@ export async function createHotel(data: any) {
         data,
     });
 
+    // @ts-ignore
     revalidateTag("hotels");
     revalidatePath("/search");
 

@@ -25,6 +25,8 @@ export const getHotels = unstable_cache(
                 rating: 4.5, // Default rating as Review model isn't aggregated yet
                 slug: firstRoom?.slug || hotel.id,
                 isVerified: hotel.isVerified,
+                createdAt: hotel.createdAt.toISOString(),
+                updatedAt: hotel.updatedAt.toISOString(),
                 coordinates: {
                     lat: hotel.lat || 40.7128,
                     lng: hotel.lng || -74.0060
@@ -32,7 +34,7 @@ export const getHotels = unstable_cache(
             };
         });
     },
-    ["hotels"],
+    ["hotels-v2"],
     {
         revalidate: 3600, // 1 hour default revalidation
         tags: ["hotels"],

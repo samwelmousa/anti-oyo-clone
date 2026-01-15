@@ -4,7 +4,7 @@ import AdminHotelTable from "@/components/AdminHotelTable";
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-    const hotels = await prisma.hotel.findMany({
+    const rawHotels = await prisma.hotel.findMany({
         include: {
             owner: {
                 select: {
@@ -16,6 +16,13 @@ export default async function AdminDashboard() {
             createdAt: "desc",
         },
     });
+
+    // Serialize for Client Component
+    const hotels = rawHotels.map(h => ({
+        ...h,
+        createdAt: h.createdAt.toISOString(),
+        updatedAt: h.updatedAt.toISOString(),
+    }));
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-8">
