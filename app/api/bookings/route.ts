@@ -54,9 +54,18 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Room not found' }, { status: 404 });
         }
 
-        // Calculate Total Price
+        // Calculate Commercial Costs
+        const TAX_RATE = 0.12;
+        const SERVICE_FEE_RATE = 0.05;
+        const COMMISSION_RATE = 0.15;
+
         const nights = differenceInCalendarDays(end, start);
-        const totalPrice = nights * Number(room.price);
+        const baseAmount = nights * Number(room.price);
+
+        const taxAmount = baseAmount * TAX_RATE;
+        const serviceFee = baseAmount * SERVICE_FEE_RATE;
+        const totalPrice = baseAmount + taxAmount + serviceFee;
+        const commissionAmount = baseAmount * COMMISSION_RATE;
 
         // Double Booking Prevention
         const existingBooking = await prisma.booking.findFirst({
@@ -78,7 +87,7 @@ export async function POST(request: Request) {
             );
         }
 
-        // Create Booking
+        // Create Booking with Financial Snapshots
         const booking = await prisma.booking.create({
             data: {
                 userId,
@@ -86,6 +95,9 @@ export async function POST(request: Request) {
                 startDate: start,
                 endDate: end,
                 totalPrice,
+                taxAmount,
+                serviceFee,
+                commissionAmount,
             },
         });
 

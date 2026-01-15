@@ -105,12 +105,20 @@ export default function BookingWidget({ price, roomId }: BookingWidgetProps) {
             {nights > 0 && (
                 <div className="mb-4 space-y-2 text-sm text-gray-600">
                     <div className="flex justify-between">
-                        <span>${numericPrice} x {nights} nights</span>
-                        <span>${nights > 0 ? nights * numericPrice : 0}</span>
+                        <span>${numericPrice.toFixed(2)} x {nights} nights</span>
+                        <span>${(nights * numericPrice).toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between font-bold text-gray-900 border-t pt-2">
-                        <span>Total before taxes</span>
-                        <span>${nights > 0 ? nights * numericPrice : 0}</span>
+                    <div className="flex justify-between">
+                        <span>Service Fee (5%)</span>
+                        <span>${(nights * numericPrice * 0.05).toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between pb-2">
+                        <span>Taxes (12%)</span>
+                        <span>${(nights * numericPrice * 0.12).toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between font-bold text-lg text-gray-900 border-t pt-2">
+                        <span>Total</span>
+                        <span>${(nights * numericPrice * 1.17).toFixed(2)}</span>
                     </div>
                 </div>
             )}

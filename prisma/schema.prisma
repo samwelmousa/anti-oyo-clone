@@ -8,6 +8,7 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // Auth.js / NextAuth Models
@@ -93,16 +94,19 @@ model Room {
 }
 
 model Booking {
-  id         String   @id @default(cuid())
-  userId     String
-  user       User     @relation(fields: [userId], references: [id])
-  roomId     String
-  room       Room     @relation(fields: [roomId], references: [id])
-  startDate  DateTime
-  endDate    DateTime
-  totalPrice Decimal  @db.Decimal(10, 2) @default(0)
-  status     String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED
-  createdAt  DateTime @default(now())
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  roomId          String
+  room            Room     @relation(fields: [roomId], references: [id])
+  startDate       DateTime
+  endDate         DateTime
+  totalPrice      Decimal  @db.Decimal(10, 2) @default(0)
+  taxAmount       Decimal  @db.Decimal(10, 2) @default(0)
+  serviceFee      Decimal  @db.Decimal(10, 2) @default(0)
+  commissionAmount Decimal @db.Decimal(10, 2) @default(0)
+  status          String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED
+  createdAt       DateTime @default(now())
 }
 
 model Review {

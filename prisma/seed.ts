@@ -51,7 +51,7 @@ async function main() {
             create: {
                 title: 'Standard Double Room',
                 slug: mockHotel.slug,
-                price: mockHotel.price,
+                price: mockHotel.price - 0.01,
                 description: 'A comfortable room with all basic amenities.',
                 amenities: ['WiFi', 'AC', 'Parking'],
                 hotelId: hotel.id,

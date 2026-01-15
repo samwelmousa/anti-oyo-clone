@@ -19,27 +19,43 @@ export default async function OwnerDashboard() {
     const userId = session.user.id;
 
     // 1. Fetch statistics
-    const [hotelsCount, activeBookingsCount, revenueResult] = await Promise.all([
-        prisma.hotel.count({ where: { ownerId: userId } }),
-        prisma.booking.count({
-            where: {
-                room: { hotel: { ownerId: userId } },
-                status: "CONFIRMED"
-            }
-        }),
-        prisma.booking.aggregate({
-            _sum: { totalPrice: true },
-            where: {
-                room: { hotel: { ownerId: userId } },
-                status: "CONFIRMED",
-            },
-        }),
-    ]);
+    const hotelsCount = await prisma.hotel.count({
+        // @ts-ignore
+        where: { ownerId: userId }
+    });
 
-    const totalRevenue = Number(revenueResult._sum.totalPrice) || 0;
+    const activeBookingsCount = await prisma.booking.count({
+        where: {
+            room: { hotel: { ownerId: userId } },
+            status: "CONFIRMED"
+        }
+    });
+
+    const revenueResult = await prisma.booking.aggregate({
+        _sum: {
+            totalPrice: true,
+            taxAmount: true,
+            serviceFee: true,
+            commissionAmount: true,
+        },
+        where: {
+            room: { hotel: { ownerId: userId } },
+            status: "CONFIRMED",
+        },
+    });
+
+    // Gross Revenue for Owner = (Total Paid by Guest) - (Tax + Service Fee)
+    const guestPaidTotal = Number(revenueResult?._sum?.totalPrice || 0);
+    const taxesAndFees = Number(revenueResult?._sum?.taxAmount || 0) + Number(revenueResult?._sum?.serviceFee || 0);
+    const grossRevenue = guestPaidTotal - taxesAndFees;
+
+    // Net Revenue = Gross - Platform Commission
+    const platformCommission = Number(revenueResult?._sum?.commissionAmount || 0);
+    const netRevenue = grossRevenue - platformCommission;
 
     // 2. Fetch Owner's Hotels
     const rawHotels = await prisma.hotel.findMany({
+        // @ts-ignore
         where: { ownerId: userId },
         include: {
             _count: {
@@ -51,6 +67,7 @@ export default async function OwnerDashboard() {
 
     const hotels = rawHotels.map(h => ({
         ...h,
+        // @ts-ignore
         _count: h._count,
         createdAt: h.createdAt.toISOString(),
         updatedAt: h.updatedAt.toISOString(),
@@ -73,7 +90,7 @@ export default async function OwnerDashboard() {
             </div>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
                 <StatCard
                     title="Total Properties"
                     value={hotelsCount.toString()}
@@ -87,11 +104,18 @@ export default async function OwnerDashboard() {
                     color="bg-green-50"
                 />
                 <StatCard
-                    title="Lifetime Earnings"
-                    value={currencyFormatter.format(totalRevenue)}
+                    title="Gross Revenue"
+                    value={currencyFormatter.format(grossRevenue)}
+                    icon={<DollarSign className="w-6 h-6 text-blue-600" />}
+                    color="bg-blue-50"
+                />
+                <StatCard
+                    title="Net Earnings"
+                    value={currencyFormatter.format(netRevenue)}
                     icon={<DollarSign className="w-6 h-6 text-emerald-600" />}
                     color="bg-emerald-50"
                     highlight
+                    subtitle={`After ${currencyFormatter.format(platformCommission)} platform cut`}
                 />
             </div>
 
@@ -167,12 +191,13 @@ export default async function OwnerDashboard() {
     );
 }
 
-function StatCard({ title, value, icon, color, highlight = false }: {
+function StatCard({ title, value, icon, color, highlight = false, subtitle }: {
     title: string;
     value: string;
     icon: React.ReactNode;
     color: string;
     highlight?: boolean;
+    subtitle?: string;
 }) {
     return (
         <div className={clsx(
@@ -186,6 +211,7 @@ function StatCard({ title, value, icon, color, highlight = false }: {
                 <div>
                     <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">{title}</p>
                     <h3 className="text-2xl font-black text-gray-900 mt-0.5">{value}</h3>
+                    {subtitle && <p className="text-[10px] text-gray-400 mt-1 font-medium">{subtitle}</p>}
                 </div>
             </div>
         </div>
