@@ -10,6 +10,8 @@ const currencyFormatter = new Intl.NumberFormat("en-US", {
     currency: "USD",
 });
 
+export const dynamic = "force-dynamic";
+
 export default async function OwnerDashboard() {
     const session = await auth();
     if (!session?.user?.id) redirect("/auth/signin");

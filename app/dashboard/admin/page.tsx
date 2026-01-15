@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import AdminHotelTable from "@/components/AdminHotelTable";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboard() {
     const hotels = await prisma.hotel.findMany({
         include: {
