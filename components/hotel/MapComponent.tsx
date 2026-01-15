@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import Map, { Marker, Popup, NavigationControl } from 'react-map-gl/mapbox';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import { useState } from 'react';
+import Map, { Marker, Popup, NavigationControl } from 'react-map-gl/maplibre';
+import 'maplibre-gl/dist/maplibre-gl.css';
 import { type Hotel } from '@/lib/mock-data';
 import clsx from 'clsx';
 
@@ -21,15 +21,16 @@ export default function MapComponent({ hotels, highlightedHotelId }: MapComponen
 
     const [popupInfo, setPopupInfo] = useState<Hotel | null>(null);
 
-    // If highlightedHotelId changes, we could flyTo it, but for now we'll just highlight the marker
+    // Using an open-source vector tile style from Maptiler (requires no token for basic demo tiles)
+    // or a direct link to a free tile server.
+    const mapStyle = "https://demotiles.maplibre.org/style.json";
 
     return (
         <div className="h-full w-full overflow-hidden rounded-xl border border-gray-200 shadow-sm relative">
             <Map
                 initialViewState={initialViewState}
                 style={{ width: '100%', height: '100%' }}
-                mapStyle="mapbox://styles/mapbox/streets-v11"
-                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+                mapStyle={mapStyle}
             >
                 <NavigationControl position="top-left" />
 
@@ -81,18 +82,6 @@ export default function MapComponent({ hotels, highlightedHotelId }: MapComponen
                     </Popup>
                 )}
             </Map>
-
-            {/* Token Warning (Dev only) */}
-            {!process.env.NEXT_PUBLIC_MAPBOX_TOKEN && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-100/80 z-50 p-4 text-center">
-                    <div className="bg-white p-6 rounded-lg shadow-xl max-w-md">
-                        <h3 className="font-bold text-red-600 text-lg mb-2">Missing Mapbox Token</h3>
-                        <p className="text-sm text-gray-600">
-                            Please add valid <code>NEXT_PUBLIC_MAPBOX_TOKEN</code> to your <code>.env.local</code> file to view the map.
-                        </p>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }
