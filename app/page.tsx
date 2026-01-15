@@ -1,65 +1,73 @@
-import Image from "next/image";
+import Hero from "@/components/home/Hero";
+import { ShieldCheck, Zap, Globe, BarChart3 } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+    <main className="min-h-screen bg-white">
+      <Hero />
+
+      {/* Features Section */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">
+              Everything you need to <span className="text-red-600">Scale</span>
+            </h2>
+            <p className="text-gray-500 max-w-xl mx-auto font-medium">
+              We've built the world's most efficient hotel engine. So you can focus on hospitality while we handle the rest.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <FeatureCard
+              icon={<Zap className="w-6 h-6 text-amber-500" />}
+              title="Mach 1 Performance"
+              description="Built on Next.js 15 and Supabase for instantaneous page loads and real-time updates."
             />
-            Deploy Now
-          </a>
+            <FeatureCard
+              icon={<ShieldCheck className="w-6 h-6 text-green-500" />}
+              title="Trust & Transparency"
+              description="Detailed fee breakdowns and audit-proof financial snapshots for every single booking."
+            />
+            <FeatureCard
+              icon={<Globe className="w-6 h-6 text-blue-500" />}
+              title="Global Reach"
+              description="Localized pricing, multi-currency support, and edge-native deployment worldwide."
+            />
+            <FeatureCard
+              icon={<BarChart3 className="w-6 h-6 text-indigo-500" />}
+              title="Smart Analytics"
+              description="Powerful insights for owners and automated commission tracking for the platform."
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Listing CTA */}
+      <section className="py-20 bg-gray-900">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-5xl font-black text-white mb-6">Ready to list your property?</h2>
+          <p className="text-gray-400 text-lg mb-10">Join 500+ hotel owners who have grown their revenue by 30% on average since joining our platform.</p>
           <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/dashboard/owner"
+            className="inline-flex items-center justify-center px-10 py-4 bg-white text-gray-900 font-bold rounded-2xl hover:bg-gray-100 transition-all active:scale-95 shadow-xl"
           >
-            Documentation
+            Start Listing Now
           </a>
         </div>
-      </main>
+      </section>
+    </main>
+  );
+}
+
+function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
+  return (
+    <div className="p-8 rounded-3xl bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all group">
+      <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+        {icon}
+      </div>
+      <h3 className="text-xl font-bold text-gray-900 mb-3">{title}</h3>
+      <p className="text-gray-500 text-sm leading-relaxed">{description}</p>
     </div>
   );
 }
